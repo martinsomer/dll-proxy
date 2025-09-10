@@ -1,7 +1,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-HMODULE dll;
+extern void on_attach(void);
+extern void on_detach(void);
+
+static HMODULE dll;
 
 typedef BOOL (WINAPI *GetFileVersionInfoA_t)(LPCSTR, DWORD, DWORD, LPVOID);
 typedef BOOL (WINAPI *GetFileVersionInfoByHandle_t)(DWORD, HANDLE, LPVOID*, PDWORD);
@@ -39,10 +42,7 @@ static VerLanguageNameW_t pVerLanguageNameW = NULL;
 static VerQueryValueA_t pVerQueryValueA = NULL;
 static VerQueryValueW_t pVerQueryValueW = NULL;
 
-void on_attach(void);
-void on_detach(void);
-
-void WRAPPER_SETUP(void) {
+static void WRAPPER_SETUP(void) {
     wchar_t sysdir[MAX_PATH];
     GetSystemDirectoryW(sysdir, MAX_PATH);
     lstrcatW(sysdir, L"\\version.dll");
@@ -68,7 +68,7 @@ void WRAPPER_SETUP(void) {
     pVerQueryValueW = (VerQueryValueW_t)GetProcAddress(dll, "VerQueryValueW");
 }
 
-void WRAPPER_CLEANUP(void) {
+static void WRAPPER_CLEANUP(void) {
     FreeLibrary(dll);
     dll = NULL;
 }
