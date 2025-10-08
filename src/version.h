@@ -42,7 +42,7 @@ static VerLanguageNameW_t pVerLanguageNameW = NULL;
 static VerQueryValueA_t pVerQueryValueA = NULL;
 static VerQueryValueW_t pVerQueryValueW = NULL;
 
-static void WRAPPER_SETUP(void) {
+static void wrapper_setup(void) {
     WCHAR sysdir[MAX_PATH];
     GetSystemDirectoryW(sysdir, MAX_PATH);
     lstrcatW(sysdir, L"\\version.dll");
@@ -68,7 +68,7 @@ static void WRAPPER_SETUP(void) {
     pVerQueryValueW = (VerQueryValueW_t)GetProcAddress(hVersion, "VerQueryValueW");
 }
 
-static void WRAPPER_CLEANUP(void) {
+static void wrapper_cleanup(void) {
     FreeLibrary(hVersion);
     hVersion = NULL;
 }
@@ -161,11 +161,11 @@ BOOL WINAPI _VerQueryValueW(LPCVOID pBlock, LPCWSTR lpSubBlock, LPVOID *lplpBuff
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved) {
     if (fdwReason == DLL_PROCESS_ATTACH) {
         DisableThreadLibraryCalls(hinstDLL);
-        WRAPPER_SETUP();
+        wrapper_setup();
         on_attach();
     } else if (fdwReason == DLL_PROCESS_DETACH) {
         on_detach();
-        WRAPPER_CLEANUP();
+        wrapper_cleanup();
     }
 
     return TRUE;
