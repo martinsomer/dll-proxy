@@ -1,8 +1,8 @@
 cl /LD ^
     /Fo:obj\ ^
-    /TC version.c ^
+    /TC src\version.c ^
     /link ^
     /NOIMPLIB /NOEXP ^
     user32.lib ^
-    /DEF:version.def ^
+    /DEF:src\version.def ^
     /OUT:bin\version.dll
