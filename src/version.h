@@ -43,7 +43,7 @@ static VerQueryValueA_t pVerQueryValueA = NULL;
 static VerQueryValueW_t pVerQueryValueW = NULL;
 
 static void WRAPPER_SETUP(void) {
-    wchar_t sysdir[MAX_PATH];
+    WCHAR sysdir[MAX_PATH];
     GetSystemDirectoryW(sysdir, MAX_PATH);
     lstrcatW(sysdir, L"\\version.dll");
     dll = LoadLibraryW(sysdir);
