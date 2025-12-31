@@ -2,10 +2,10 @@
 #include <windows.h>
 #include "version.h"
 
-void on_attach(void) {
+void DLLP_OnAttach(void) {
     MessageBoxW(NULL, L"DLL_PROCESS_ATTACH", L"Proxy", MB_OK);
 }
 
-void on_detach(void) {
+void DLLP_OnDetach(void) {
     MessageBoxW(NULL, L"DLL_PROCESS_DETACH", L"Proxy", MB_OK);
 }

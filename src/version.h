@@ -1,8 +1,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-extern void on_attach(void);
-extern void on_detach(void);
+extern void DLLP_OnAttach(void);
+extern void DLLP_OnDetach(void);
 
 static HMODULE hVersion;
 
@@ -42,7 +42,7 @@ static VerLanguageNameW_t pVerLanguageNameW = NULL;
 static VerQueryValueA_t pVerQueryValueA = NULL;
 static VerQueryValueW_t pVerQueryValueW = NULL;
 
-static void wrapper_setup(void) {
+static void DLLP_Setup(void) {
     WCHAR sysdir[MAX_PATH];
     GetSystemDirectoryW(sysdir, MAX_PATH);
     lstrcatW(sysdir, L"\\version.dll");
@@ -68,7 +68,7 @@ static void wrapper_setup(void) {
     pVerQueryValueW = (VerQueryValueW_t)GetProcAddress(hVersion, "VerQueryValueW");
 }
 
-static void wrapper_cleanup(void) {
+static void DLLP_Cleanup(void) {
     FreeLibrary(hVersion);
     hVersion = NULL;
 }
@@ -161,11 +161,11 @@ BOOL WINAPI _VerQueryValueW(LPCVOID pBlock, LPCWSTR lpSubBlock, LPVOID *lplpBuff
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved) {
     if (fdwReason == DLL_PROCESS_ATTACH) {
         DisableThreadLibraryCalls(hinstDLL);
-        wrapper_setup();
-        on_attach();
+        DLLP_Setup();
+        DLLP_OnAttach();
     } else if (fdwReason == DLL_PROCESS_DETACH) {
-        on_detach();
-        wrapper_cleanup();
+        DLLP_OnDetach();
+        DLLP_Cleanup();
     }
 
     return TRUE;
